@@ -70,6 +70,8 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".postings.activity.ThingMainActivity"/>
+		<activity android:name=".postings.activity.DetailActivity"/>
 	</application>
 
 </manifest>

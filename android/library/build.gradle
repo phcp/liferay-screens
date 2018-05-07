@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
 	compileSdkVersion rootProject.ext.compileSdkVersion
@@ -68,7 +69,21 @@ dependencies {
 	testImplementation libraries.junit
 	testImplementation libraries.robolectric
 	testImplementation libraries.mockito
+
+	// thingScreenlet
+	implementation libraries.gson
+	api libraries.okhttp
+	api libraries.result
+	api libraries.anko_commons
+	api libraries.circle_image_view
+
+	implementation libraries.kotlin
+	api libraries.coroutines_core
+	api libraries.coroutines_android
 }
 
 apply from: '../bintray.gradle'
 apply from: '../install.gradle'
+repositories {
+	mavenCentral()
+}
