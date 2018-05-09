@@ -37,42 +37,6 @@ class ConverterDelegate {
     companion object {
         @JvmStatic
         fun initializeConverter() {
-            converters[BlogPosting::class.java.name] = { it: Thing ->
-                BlogPosting(
-                    it["headline"] as? String,
-                    it["alternativeHeadline"] as? String,
-                    it["articleBody"] as? String,
-                    it["creator"] as? Relation,
-                    (it["dateCreated"] as? String)?.asDate())
-            }
-
-            converters[Collection::class.java.name] = { it: Thing ->
-                val member = (it["member"] as? List<Relation>)?.mapNotNull {
-                    graph[it.id]?.value
-                }
-
-                val totalItems = (it["totalItems"] as? Double)?.toInt()
-
-                val nextPage = (it["view"] as Relation)["next"] as? String
-
-                val pages = nextPage?.let(::Pages)
-
-                Collection(member, totalItems, pages)
-            }
-
-            converters[Person::class.java.name] = { it: Thing ->
-                val name = it["name"] as? String
-
-                val email = it["email"] as? String
-
-                val jobTitle = it["jobTitle"] as? String
-
-                val birthDate = (it["birthDate"] as? String)?.asDate()
-
-                val image = it["image"] as? String
-
-                Person(name, email, jobTitle, birthDate, image)
-            }
 
             converters[FormInstance::class.java.name] = { it: Thing ->
 
@@ -122,6 +86,9 @@ class ConverterDelegate {
 
                 FormInstance(name, description, ddmStructure)
             }
+            converters[BlogPosting::class.java.name] = BlogPosting.converter
+            converters[Collection::class.java.name] = Collection.converter
+            converters[Person::class.java.name] = Person.converter
         }
     }
 }
