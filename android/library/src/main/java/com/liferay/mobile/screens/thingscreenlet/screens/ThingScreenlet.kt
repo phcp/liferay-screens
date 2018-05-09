@@ -20,6 +20,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.github.kittinunf.result.failure
 import com.liferay.mobile.screens.R
+import com.liferay.mobile.screens.ddm.form.model.FormInstance
 import com.liferay.mobile.screens.thingscreenlet.extensions.inflate
 import com.liferay.mobile.screens.thingscreenlet.model.BlogPosting
 import com.liferay.mobile.screens.thingscreenlet.model.Collection
@@ -55,7 +56,8 @@ class ThingScreenlet @JvmOverloads constructor(
 		val layoutIds: MutableMap<String, MutableMap<Scenario, Int>> = mutableMapOf(
 			"BlogPosting" to BlogPosting.DEFAULT_VIEWS,
 			"Collection" to Collection.DEFAULT_VIEWS,
-			"Person" to Person.DEFAULT_VIEWS
+			"Person" to Person.DEFAULT_VIEWS,
+			"FormInstance" to FormInstance.DEFAULT_VIEWS
 		)
 	}
 
