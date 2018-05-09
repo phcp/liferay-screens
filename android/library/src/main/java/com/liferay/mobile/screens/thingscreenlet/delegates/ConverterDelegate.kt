@@ -28,6 +28,7 @@ import com.liferay.mobile.sdk.apio.graph
 import com.liferay.mobile.sdk.apio.model.Relation
 import com.liferay.mobile.sdk.apio.model.Thing
 import com.liferay.mobile.sdk.apio.model.get
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
@@ -74,49 +75,52 @@ class ConverterDelegate {
             }
 
             converters[FormInstance::class.java.name] = { it: Thing ->
-                val formInstanceId = it.id.toLong()
 
-                val attributes = HashMap<String, Any>()
-                attributes["dataType"] = Field.DataType.STRING
-                attributes["readOnly"] = false
-                attributes["type"] = Field.EditorType.TEXT
-                attributes["required"] = false
-                attributes["showLabel"] = true
-                attributes["repeatable"] = false
-                attributes["label"] = "TextField single"
-                attributes["name"] = "TextFieldSingle"
-                attributes["tip"] = "TextField hint"
-                attributes["placeHolder"] = ""
+                val name = it["name"] as String
+                val description = it["description"] as String
+
+                val structureRelation = it.attributes["structure"] as Relation
+
+                val structureDescription = structureRelation["description"] as String
+                val structureName = structureRelation["name"] as String
+
+                val attributes = mapOf(
+                    "dataType" to Field.DataType.STRING.value,
+                    "readOnly" to false,
+                    "type" to Field.EditorType.TEXT.value,
+                    "required" to false,
+                    "showLabel" to true,
+                    "repeatable" to false,
+                    "label" to "TextField single",
+                    "name" to "TextFieldSingle",
+                    "tip" to "TextField hint",
+                    "placeHolder" to ""
+                    )
+
                 val stringField = StringField(attributes, Locale.ENGLISH, Locale.ENGLISH)
 
-                val attributes2 = HashMap<String, Any>()
-                attributes["dataType"] = Field.DataType.STRING
-                attributes["readOnly"] = false
-                attributes["type"] = Field.EditorType.TEXT_AREA
-                attributes["required"] = false
-                attributes["showLabel"] = true
-                attributes["repeatable"] = false
-                attributes["label"] = "TextField multiple"
-                attributes["name"] = "TextFieldMultiple"
-                attributes["tip"] = "TextField multiple hint"
-                attributes["placeHolder"] = ""
+                val attributes2 = mapOf(
+                    "dataType" to Field.DataType.STRING.value,
+                    "readOnly" to false,
+                    "type" to Field.EditorType.TEXT_AREA.value,
+                    "required" to false,
+                    "showLabel" to true,
+                    "repeatable" to false,
+                    "label" to "TextField multiple",
+                    "name" to "TextFieldMultiple",
+                    "tip" to "TextField multiple hint",
+                    "placeHolder" to ""
+                )
+
                 val stringField2 = StringField(attributes2, Locale.ENGLISH, Locale.ENGLISH)
 
                 val fields = ArrayList<Field<*>>()
                 fields.add(stringField)
                 fields.add(stringField2)
 
-                val ddmStructure = DDMStructure()
+                val ddmStructure = DDMStructure(structureName, structureDescription, fields)
 
-                val jsonObject = JSONObject()
-                jsonObject.put("descriptionCurrentValue", "Basic fields form")
-                jsonObject.put("structureId", "36579")
-                jsonObject.put("nameCurrentValue", "Basic fields")
-
-                ddmStructure.parse(jsonObject)
-                ddmStructure.fields = fields
-
-                FormInstance(formInstanceId, ddmStructure);
+                FormInstance(name, description, ddmStructure)
             }
         }
     }
