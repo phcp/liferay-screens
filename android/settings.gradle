@@ -41,5 +41,5 @@ project(':westerosemployees-hybrid').projectDir = new File(settingsDir, '/sample
 include ':liferay-services-integration'
 
 include 'liferay-android-sdk'
-project(':liferay-android-sdk').projectDir = new File(settingsDir, '../../../liferay-android-sdk')
+project(':liferay-android-sdk').projectDir = new File(settingsDir, '../../liferay-android-sdk')
 project(':liferay-android-sdk').name = "android-sdk"
