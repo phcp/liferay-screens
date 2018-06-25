@@ -38,8 +38,5 @@ project(':getuserscreenlet').projectDir = new File(settingsDir, '/samples/getuse
 include ':westerosemployees-hybrid'
 project(':westerosemployees-hybrid').projectDir = new File(settingsDir, '/samples/westerosemployees-hybrid')
 
-include ':liferay-services-integration'
-
-include 'liferay-android-sdk'
-project(':liferay-android-sdk').projectDir = new File(settingsDir, '../../liferay-android-sdk')
-project(':liferay-android-sdk').name = "android-sdk"
+include 'apio-consumer-android'
+project(':apio-consumer-android').projectDir = new File(settingsDir, '../../apio-consumer-android/apio-consumer')

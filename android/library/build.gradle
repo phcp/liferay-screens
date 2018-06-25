@@ -10,6 +10,7 @@ android {
 		targetSdkVersion rootProject.ext.targetSdkVersion
 		versionCode rootProject.ext.versionCode
 		versionName rootProject.ext.versionName
+		multiDexEnabled true
 	}
 
 	buildTypes {
@@ -45,7 +46,9 @@ dependencies {
 	}
 	api group: 'org.apache.cordova', name: 'framework', version: '6.2.3', classifier: 'debug', ext: 'aar'
 
-	api project(':android-sdk')
+	api(project(':apio-consumer-android')) {
+		exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+	}
 	implementation libraries.appCompat
 	implementation libraries.design
 	implementation libraries.exif
@@ -78,6 +81,8 @@ dependencies {
 	implementation libraries.kotlin
 	api libraries.coroutines_core
 	api libraries.coroutines_android
+
+	api libraries.support_multidex
 }
 
 apply from: '../bintray.gradle'

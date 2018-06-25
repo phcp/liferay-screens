@@ -19,7 +19,7 @@ import com.liferay.mobile.screens.ddm.form.model.FormInstance
 import com.liferay.mobile.screens.thingscreenlet.model.BlogPosting
 import com.liferay.mobile.screens.thingscreenlet.model.Collection
 import com.liferay.mobile.screens.thingscreenlet.model.Person
-import com.liferay.mobile.sdk.apio.delegates.converters
+import com.liferay.apio.consumer.delegates.converters
 
 class ConverterDelegate {
 
