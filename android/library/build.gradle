@@ -47,7 +47,7 @@ dependencies {
 	}
 	api group: 'org.apache.cordova', name: 'framework', version: '6.2.3', classifier: 'debug', ext: 'aar'
 
-	api('com.liferay.mobile:apio-consumer-android:0.0.4') {
+	api('com.liferay.mobile:apio-consumer-android:0.0.5') {
 		exclude group: 'com.squareup.okhttp3', module: 'okhttp'
 	}
 	implementation libraries.appCompat
