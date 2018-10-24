@@ -11,7 +11,6 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-
 package com.liferay.mobile.screens.thingscreenlet.screens
 
 import android.content.Context
@@ -27,6 +26,7 @@ import com.liferay.apio.consumer.delegates.observe
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.mobile.screens.R
 import com.liferay.mobile.screens.context.SessionContext
+import com.liferay.mobile.screens.ddm.form.model.FormInstance
 import com.liferay.mobile.screens.thingscreenlet.extensions.inflate
 import com.liferay.mobile.screens.thingscreenlet.model.BlogPosting
 import com.liferay.mobile.screens.thingscreenlet.model.Collection
@@ -60,7 +60,8 @@ class ThingScreenlet @JvmOverloads constructor(
 		val layoutIds: MutableMap<String, MutableMap<Scenario, Int>> = mutableMapOf(
 			"BlogPosting" to BlogPosting.DEFAULT_VIEWS,
 			"Collection" to Collection.DEFAULT_VIEWS,
-			"Person" to Person.DEFAULT_VIEWS
+			"Person" to Person.DEFAULT_VIEWS,
+			"Form" to FormInstance.DEFAULT_VIEWS
 		)
 	}
 
