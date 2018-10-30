@@ -25,9 +25,6 @@ android {
 		}
 	}
 
-	buildTypes {
-		xamarin {}
-	}
 	sourceSets {
 		release {
 			java.srcDirs = ['src/debug/java']
@@ -91,3 +88,7 @@ dependencies {
 
 apply from: '../bintray.gradle'
 apply from: '../install.gradle'
+repositories {
+	mavenLocal()
+	mavenCentral()
+}

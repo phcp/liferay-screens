@@ -16,7 +16,9 @@ package com.liferay.mobile.screens.ddl.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.liferay.mobile.screens.asset.AssetEntry;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONObject;
 
