@@ -8,7 +8,7 @@
     <application>
         <activity
             android:name=".base.MediaStoreRequestShadowActivity"/>
-            
+
         <activity
             android:name=".ddm.form.view.SuccessPageActivity"/>
 
