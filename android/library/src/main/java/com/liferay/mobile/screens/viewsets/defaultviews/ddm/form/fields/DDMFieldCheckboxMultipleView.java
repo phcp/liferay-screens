@@ -96,11 +96,11 @@ public class DDMFieldCheckboxMultipleView extends LinearLayout
             linearLayout.setOrientation(HORIZONTAL);
         }
 
-        LayoutParams layoutParams = calculateLayoutParams(this.field.isInline(), this.field.isShowAsSwitcher());
+        LayoutParams layoutParams = calculateLayoutParams(this.field.isInline(), this.field.showAsSwitcher());
 
         List<Option> availableOptions = field.getAvailableOptions();
 
-        if (field.isShowAsSwitcher()) {
+        if (field.showAsSwitcher()) {
             for (Option opt : availableOptions) {
                 Switch switchView = createSwitchView(opt, layoutParams);
                 addView(field, switchView);
@@ -170,9 +170,9 @@ public class DDMFieldCheckboxMultipleView extends LinearLayout
         return switchView;
     }
 
-    private LayoutParams calculateLayoutParams(Boolean isInline, Boolean isShowAsSwitcher) {
+    private LayoutParams calculateLayoutParams(Boolean isInline, Boolean showAsSwitcher) {
 
-        if (isShowAsSwitcher && !isInline) {
+        if (showAsSwitcher && !isInline) {
             return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         } else {
             return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f);
