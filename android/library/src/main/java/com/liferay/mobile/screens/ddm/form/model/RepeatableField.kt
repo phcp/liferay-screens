@@ -25,7 +25,7 @@ import java.io.Serializable
  */
 class RepeatableField @JvmOverloads constructor(
 	val baseField: Field<*>,
-	private var siblings: MutableList<Field<*>> = mutableListOf()) : Field<Serializable>() {
+	private var siblings: MutableList<Field<*>> = mutableListOf()) : Field<RepeatableValue>() {
 
 	init {
 		editorType = EditorType.REPEATABLE
@@ -46,6 +46,13 @@ class RepeatableField @JvmOverloads constructor(
 			Field::class.java.classLoader).toMutableList() as MutableList<Field<*>>
 	}
 
+	fun setCurrentStringValue(values: List<String>?) {
+		values?.let {
+			syncSiblingFields(values)
+			setRepeatedFieldValues(values)
+		}
+	}
+
 	fun repeatField(): Field<*> {
 		val dataType = baseField.dataType
 		val attributes = baseField.attributes
@@ -64,26 +71,28 @@ class RepeatableField @JvmOverloads constructor(
 		siblings.remove(field)
 	}
 
-	override fun convertToData(value: Serializable?): String {
+	override fun convertToData(value: RepeatableValue?): String {
 		return repeatedFields.joinToString(",") {
 			it.toData() ?: ""
 		}
 	}
 
-	override fun convertToFormattedString(value: Serializable): String {
+	override fun convertToFormattedString(value: RepeatableValue): String {
 		return repeatedFields.joinToString(",") {
 			it.toFormattedString() ?: ""
 		}
 	}
 
-	override fun convertFromString(stringValue: String?): Serializable {
-		return stringValue?.split(",").toString()
+	override fun convertFromString(stringValue: String?): RepeatableValue {
+		return RepeatableValue(stringValue?.split(","))
 	}
 
 	override fun setReadOnly(readOnly: Boolean) {
-		super.setReadOnly(readOnly)
+		this.isReadOnly = readOnly
 
-		baseField.attributes[FormFieldKeys.IS_READ_ONLY_KEY] = readOnly
+		repeatedFields.forEach {
+			it.isReadOnly = readOnly
+		}
 	}
 
 	override fun isValid(): Boolean {
@@ -101,20 +110,22 @@ class RepeatableField @JvmOverloads constructor(
 	}
 
 	override fun setCurrentStringValue(value: String?) {
-		value?.split(",")?.let { values ->
-			val newValuesCount = values.count()
-			val oldValuesCount = repeatedFields.count()
+		value?.split(",")?.let {
+			setCurrentStringValue(it)
+		}
+	}
 
-			val hasFieldsAdded = newValuesCount > oldValuesCount
-			val hasFieldsRemoved = newValuesCount < oldValuesCount
+	private fun syncSiblingFields(values: List<String>) {
+		val newValuesCount = values.count()
+		val oldValuesCount = repeatedFields.count()
 
-			if (hasFieldsAdded) {
-				repeatFields(newValuesCount - oldValuesCount)
-			} else if (hasFieldsRemoved) {
-				removeLastFields(oldValuesCount - newValuesCount)
-			}
+		val hasFieldsAdded = newValuesCount > oldValuesCount
+		val hasFieldsRemoved = newValuesCount < oldValuesCount
 
-			setRepeatedFieldValues(values)
+		if (hasFieldsAdded) {
+			repeatFields(newValuesCount - oldValuesCount)
+		} else if (hasFieldsRemoved) {
+			removeLastFields(oldValuesCount - newValuesCount)
 		}
 	}
 
@@ -156,3 +167,5 @@ class RepeatableField @JvmOverloads constructor(
 	}
 
 }
+
+class RepeatableValue(val values: List<String>?) : Serializable

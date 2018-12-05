@@ -32,5 +32,6 @@ class FormConstants {
 		const val TEXT = "text"
 		const val FIELDS = "fields"
 		const val FIELD_VALUES = "fieldValues"
+		const val DRAFT = "draft"
 	}
 }

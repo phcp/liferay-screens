@@ -256,12 +256,20 @@ class DDMFormPresenter(val view: DDMFormViewContract.DDMFormView) : DDMFormViewC
 			Pair(it.name, it)
 		}.toMap()
 
-		fieldValues.forEach { fieldValue ->
-			val field = fieldsMap[fieldValue.name]
-
-			field?.also {
-				if (!field.isTransient) {
-					field.setCurrentStringValue(fieldValue.value as String)
+		fieldValues.groupBy {
+			it.name
+		}.mapValues { fieldValueEntry ->
+			when {
+				fieldValueEntry.value.count() > 1 -> fieldValueEntry.value.map { it.value.toString() }
+				else -> fieldValueEntry.value.firstOrNull()?.value
+			}
+		}.forEach { fieldValueEntry ->
+			fieldsMap[fieldValueEntry.key]?.takeIf { field ->
+				!field.isTransient
+			}?.let { field ->
+				when (field) {
+					is RepeatableField -> field.setCurrentStringValue(fieldValueEntry.value as? List<String>)
+					else -> field.setCurrentStringValue(fieldValueEntry.value.toString())
 				}
 			}
 		}

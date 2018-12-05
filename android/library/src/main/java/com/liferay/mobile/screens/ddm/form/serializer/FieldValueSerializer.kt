@@ -14,7 +14,6 @@
 
 package com.liferay.mobile.screens.ddm.form.serializer
 
-import com.google.gson.*
 import com.liferay.mobile.screens.ddl.model.*
 import com.liferay.mobile.screens.ddm.form.model.RepeatableField
 
@@ -24,18 +23,14 @@ import com.liferay.mobile.screens.ddm.form.model.RepeatableField
 class FieldValueSerializer {
 
 	companion object {
-		private val gson: Gson = GsonFactory.create()
-
-		private val EMPTY_JSON = JsonObject()
 		private const val EMPTY_STRING = ""
 		private val EMPTY_LIST = listOf<Any>()
 
-		fun serialize(fields: FieldList, filter: (Field<*>) -> (Boolean) = { true }): String {
+		fun serialize(fields: FieldList, filter: (Field<*>) -> (Boolean) = { true }): List<Map<String, Any?>> {
 			return fields
 				.flatten()
 				.filter(filter)
 				.mapValues()
-				.toJson()
 		}
 
 		private fun FieldList.flatten(): FieldList {
@@ -51,14 +46,13 @@ class FieldValueSerializer {
 			return when (editorType) {
 				Field.EditorType.CHECKBOX_MULTIPLE,
 				Field.EditorType.SELECT -> getListValue()
-				Field.EditorType.DOCUMENT -> getDocumentValue()
 				Field.EditorType.RADIO -> getRadioValue()
 				else -> getStringValue()
 			}
 		}
 
 		private fun Field<*>.getDocumentValue(): Any? {
-			return (currentValue as? DocumentRemoteFile)?.toData() ?: EMPTY_JSON
+			return (currentValue as? DocumentRemoteFile)?.toData() ?: EMPTY_STRING
 		}
 
 		private fun Field<*>.getListValue(): List<*>? {
@@ -81,12 +75,14 @@ class FieldValueSerializer {
 
 		private fun FieldList.mapValues(): List<Map<String, Any?>> {
 			return map {
-				mapOf("name" to it.name, "value" to it.getSubmitValue())
+				mapOf(
+					"name" to it.name,
+					when(it.editorType) {
+						Field.EditorType.DOCUMENT -> "document" to it.getDocumentValue()
+						else -> "value" to it.getSubmitValue()
+					}
+				)
 			}
-		}
-
-		private fun List<Map<String, Any?>>.toJson(): String {
-			return gson.toJson(this)
 		}
 	}
 }

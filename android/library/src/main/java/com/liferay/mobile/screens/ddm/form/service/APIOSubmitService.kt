@@ -67,10 +67,11 @@ class APIOSubmitService : BaseAPIOService() {
 		onError: (Exception) -> Unit) {
 
 		apioConsumer.performOperation(thing.id, operation.id, fillFields = { _ ->
-			mapOf(
-				Pair("isDraft", isDraft),
+			val mapOf = mapOf(
+				Pair(FormConstants.DRAFT, isDraft),
 				Pair(FormConstants.FIELD_VALUES, FieldValueSerializer.serialize(fields) { !it.isTransient })
 			)
+			mapOf
 		}, onComplete = { result ->
 			result.fold(onSuccess, onError)
 		})
