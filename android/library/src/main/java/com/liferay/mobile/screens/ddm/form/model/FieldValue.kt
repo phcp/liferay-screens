@@ -20,14 +20,16 @@ import android.os.Parcelable
 /**
  * @author Paulo Cruz
  */
-open class FieldValue(val name: String, var value: Any?) : Parcelable {
+open class FieldValue(val name: String, var value: Any?, var document: String? = null) : Parcelable {
 	constructor(parcel: Parcel) : this(
 		parcel.readString(),
-		parcel.readValue(String::class.java.classLoader))
+		parcel.readValue(String::class.java.classLoader),
+		parcel.readString())
 
 	override fun writeToParcel(parcel: Parcel, flags: Int) {
 		parcel.writeString(name)
 		parcel.writeValue(value)
+		parcel.writeString(document)
 	}
 
 	override fun describeContents(): Int {

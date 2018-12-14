@@ -252,8 +252,10 @@ class DDMFormPresenter(val view: DDMFormViewContract.DDMFormView) : DDMFormViewC
 	}
 
 	private fun updateFields(fieldValues: List<FieldValue>, fields: MutableList<Field<*>>) {
-		val fieldsMap = fields.map {
-			Pair(it.name, it)
+		val fieldsMap = fields.filter {
+			!it.isTransient
+		}.map {
+			it.name to it
 		}.toMap()
 
 		fieldValues.groupBy {
@@ -264,9 +266,7 @@ class DDMFormPresenter(val view: DDMFormViewContract.DDMFormView) : DDMFormViewC
 				else -> fieldValueEntry.value.firstOrNull()?.value
 			}
 		}.forEach { fieldValueEntry ->
-			fieldsMap[fieldValueEntry.key]?.takeIf { field ->
-				!field.isTransient
-			}?.let { field ->
+			fieldsMap[fieldValueEntry.key]?.let { field ->
 				when (field) {
 					is RepeatableField -> field.setCurrentStringValue(fieldValueEntry.value as? List<String>)
 					else -> field.setCurrentStringValue(fieldValueEntry.value.toString())

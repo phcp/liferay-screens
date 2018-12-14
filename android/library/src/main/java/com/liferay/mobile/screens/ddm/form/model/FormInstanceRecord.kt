@@ -56,9 +56,10 @@ class FormInstanceRecord(
 
 			return (map["member"] as List<Map<String, String>>).mapTo(mutableListOf()) {
 				val name = it["name"] ?: ""
-				val value = it["document"] ?: it["value"] ?: ""
+				val value = it["value"]
+				val document = it["document"]
 
-				FieldValue(name, value)
+				FieldValue(name, value, document)
 			}
 		}
 
