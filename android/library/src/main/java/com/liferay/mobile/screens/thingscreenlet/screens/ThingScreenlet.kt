@@ -92,8 +92,8 @@ open class ThingScreenlet @JvmOverloads constructor(
 	val baseView: BaseView? get() = layout as? BaseView
 
 	@JvmOverloads
-	fun load(thingId: String, scenario: Scenario? = null, credentials: String? = null,
-		onSuccess: ((ThingScreenlet) -> Unit)? = null, onError: ((Exception) -> Unit)? = null) {
+	fun load(thingId: String, scenario: Scenario? = null, onSuccess: ((ThingScreenlet) -> Unit)? = null,
+		onError: ((Exception) -> Unit)? = null) {
 
 		val apioConsumer = ApioConsumer(getApioAuthenticator())
 

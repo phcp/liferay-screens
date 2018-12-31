@@ -22,6 +22,7 @@ import com.liferay.mobile.screens.R
 import com.liferay.mobile.screens.ddl.form.util.FormConstants
 import com.liferay.mobile.screens.thingscreenlet.screens.ThingScreenlet
 import com.liferay.mobile.screens.thingscreenlet.screens.views.Detail
+import com.liferay.mobile.screens.util.LiferayLogger
 import com.liferay.mobile.screens.viewsets.defaultviews.ddm.form.DDMFormView
 
 /**
@@ -55,6 +56,7 @@ class DDMFormScreenlet @JvmOverloads constructor(
 					listener?.onFormLoaded(ddmFormView.formInstance)
 				}
 			}, onError = {
+				LiferayLogger.e(it.message, it)
 				listener?.onError(it)
 			})
 		}

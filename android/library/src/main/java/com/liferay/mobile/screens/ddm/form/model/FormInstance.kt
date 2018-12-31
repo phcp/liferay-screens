@@ -24,6 +24,7 @@ import com.liferay.mobile.screens.ddl.model.DDMStructure
 import com.liferay.mobile.screens.ddl.model.Field
 import com.liferay.mobile.screens.thingscreenlet.screens.views.Detail
 import com.liferay.mobile.screens.thingscreenlet.screens.views.Scenario
+import com.liferay.mobile.screens.util.LocaleUtil
 import java.util.*
 
 /**
@@ -34,7 +35,8 @@ import java.util.*
 data class FormInstance(
 	val name: String,
 	val description: String?,
-	val defaultLanguage: String,
+	val availableLocales: List<Locale>,
+	val defaultLocale: Locale,
 	val ddmStructure: DDMStructure,
 	val hasDataProvider: Boolean,
 	val hasFormRules: Boolean) {
@@ -53,12 +55,16 @@ data class FormInstance(
 
 			val description = it[FormConstants.DESCRIPTION] as? String
 
-			val defaultLanguage = it[FormConstants.DEFAULT_LANGUAGE] as String
+			val availableLanguages = (it[FormConstants.AVAILABLE_LANGUAGES] as List<Any?>).map {
+				LocaleUtil.convertLanguageCodeToLocale(it as String)
+			}
 
-			val locale = Locale(defaultLanguage)
+			val defaultLocale = LocaleUtil.convertLanguageCodeToLocale(it[FormConstants.DEFAULT_LANGUAGE] as String)
+
+			val currentLocale = LocaleUtil.getLocaleFromAvailableLocales(availableLanguages, defaultLocale)
 
 			val ddmStructure = (it[FormConstants.STRUCTURE] as Relation).let {
-				getStructure(it, locale)
+				getStructure(it, currentLocale, defaultLocale)
 			}
 
 			val hasDataProvider = ddmStructure.fields.any {
@@ -69,17 +75,17 @@ data class FormInstance(
 				it.hasFormRules()
 			}
 
-			FormInstance(name, description, defaultLanguage, ddmStructure, hasDataProvider, hasFormRules)
+			FormInstance(name, description, availableLanguages, defaultLocale, ddmStructure, hasDataProvider, hasFormRules)
 		}
 
-		private fun getStructure(relation: Relation, locale: Locale): DDMStructure {
+		private fun getStructure(relation: Relation, currentLocale: Locale, defaultLocale: Locale): DDMStructure {
 
 			val name = relation[FormConstants.NAME] as String
 
 			val description = relation[FormConstants.DESCRIPTION] as? String
 
 			val pages = (relation[FormConstants.PAGES] as Map<String, Any>).let {
-				getPages(it, locale)
+				getPages(it, currentLocale, defaultLocale)
 			}
 
 			val successPage = relation[FormConstants.SUCCESS_PAGE]?.let {
@@ -94,21 +100,21 @@ data class FormInstance(
 			return DDMStructure(name, description, pages, successPage)
 		}
 
-		private fun getPages(mapper: Map<String, Any>, locale: Locale): List<FormPage> {
+		private fun getPages(mapper: Map<String, Any>, currentLocale: Locale, defaultLocale: Locale): List<FormPage> {
 
 			return (mapper["member"] as List<Map<String, Any>>).mapTo(mutableListOf()) {
 
 				val headlinePage = it[FormConstants.HEADLINE] as? String ?: ""
 				val textPage = it[FormConstants.TEXT] as? String ?: ""
 				val fields = (it[FormConstants.FIELDS] as Map<String, Any>).let {
-					getFields(it, locale)
+					getFields(it, currentLocale, defaultLocale)
 				}.toMutableList()
 
 				FormPage(headlinePage, textPage, fields)
 			}
 		}
 
-		private fun getFields(map: Map<String, Any>, locale: Locale): List<Field<*>> {
+		private fun getFields(map: Map<String, Any>, currentLocale: Locale, defaultLocale: Locale): List<Field<*>> {
 
 			if (map["totalItems"] as Double <= 0) {
 				return mutableListOf()
@@ -129,7 +135,7 @@ data class FormInstance(
 				}
 
 				val fieldDataType = Field.DataType.assignDataTypeFromString(dataType)
-				fieldDataType.createField(attributes, locale, locale)
+				fieldDataType.createField(attributes, currentLocale, defaultLocale)
 			}
 		}
 	}

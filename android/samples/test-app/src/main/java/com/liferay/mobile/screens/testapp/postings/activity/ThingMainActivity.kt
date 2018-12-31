@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.liferay.apio.consumer.model.Thing
 import com.liferay.apio.consumer.model.get
+import com.liferay.mobile.screens.context.SessionContext
 import com.liferay.mobile.screens.testapp.R
 import com.liferay.mobile.screens.thingscreenlet.delegates.bindNonNull
 import com.liferay.mobile.screens.thingscreenlet.model.BlogPosting
@@ -44,7 +45,7 @@ class ThingMainActivity : AppCompatActivity(), ScreenletEvents {
 
 		val id = "https://apiosample.wedeploy.io/p/blog-postings"
 
-		thingScreenlet.load(id, credentials = "Basic YXBpb0BsaWZlcmF5LmNvbTphcGlvZGV2cw==")
+		thingScreenlet.load(id)
 
 		thingScreenlet.screenletEvents = this
 	}
