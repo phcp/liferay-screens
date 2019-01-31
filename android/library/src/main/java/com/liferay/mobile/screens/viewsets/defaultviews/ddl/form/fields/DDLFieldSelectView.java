@@ -42,6 +42,7 @@ public class DDLFieldSelectView extends BaseDDLFieldTextView<SelectableOptionsFi
         public void onClick(DialogInterface dialog, int which) {
             clearField();
             alertDialog.dismiss();
+            onClearListener.onClear();
         }
     };
 
@@ -52,14 +53,7 @@ public class DDLFieldSelectView extends BaseDDLFieldTextView<SelectableOptionsFi
         }
     };
 
-    public void setOnValueChangedListener(DialogInterface.OnClickListener onValueChangedListener) {
-        this.onValueChangedListener = onValueChangedListener;
-    }
-
-    public DialogInterface.OnClickListener getOnValueChangedListener() {
-        return onValueChangedListener;
-    }
-
+    private OnClearListener onClearListener;
     private DialogInterface.OnClickListener onValueChangedListener;
 
     public DDLFieldSelectView(Context context) {
@@ -100,6 +94,22 @@ public class DDLFieldSelectView extends BaseDDLFieldTextView<SelectableOptionsFi
         editText.setFocusableInTouchMode(false);
         editText.setOnClickListener(this);
         editText.setInputType(InputType.TYPE_NULL);
+    }
+
+    public OnClearListener getOnClearListener() {
+        return onClearListener;
+    }
+
+    public void setOnClearListener(OnClearListener onClearListener) {
+        this.onClearListener = onClearListener;
+    }
+
+    public DialogInterface.OnClickListener getOnValueChangedListener() {
+        return onValueChangedListener;
+    }
+
+    public void setOnValueChangedListener(DialogInterface.OnClickListener onValueChangedListener) {
+        this.onValueChangedListener = onValueChangedListener;
     }
 
     @Override
@@ -225,5 +235,9 @@ public class DDLFieldSelectView extends BaseDDLFieldTextView<SelectableOptionsFi
                 getField().clearOption(option);
             }
         }
+    }
+
+    public interface OnClearListener {
+        void onClear();
     }
 }
