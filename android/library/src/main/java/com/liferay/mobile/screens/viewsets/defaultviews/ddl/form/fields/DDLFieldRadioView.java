@@ -199,6 +199,7 @@ public class DDLFieldRadioView extends LinearLayout
         setSaveEnabled(true);
 
         onChangedValueObservable = RxRadioGroup.checkedChanges(radioGroup)
+            .skip(1)
             .distinctUntilChanged()
             .map(new Func1<Integer, SelectableOptionsField>() {
                 @Override
