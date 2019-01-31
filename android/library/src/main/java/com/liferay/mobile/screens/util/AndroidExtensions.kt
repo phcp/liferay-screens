@@ -22,6 +22,8 @@ import android.view.View
 /**
  * @author Paulo Cruz
  */
+fun List<View?>.firstNotNull(): View? = this.filterNotNull().firstOrNull()
+
 fun TypedArray.getLong(id: Int, defValue: Long): Long = getLongOrNull(id) ?: defValue
 
 fun TypedArray.getLongOrNull(id: Int): Long? = this.getString(id)?.toLongOrNull()
