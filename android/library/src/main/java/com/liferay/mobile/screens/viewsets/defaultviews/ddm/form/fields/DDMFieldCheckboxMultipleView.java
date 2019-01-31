@@ -103,10 +103,7 @@ public class DDMFieldCheckboxMultipleView extends LinearLayout
             }
         }
 
-        if (!StringUtils.isNullOrEmpty(this.field.getTip())) {
-            hintTextView.setText(this.field.getTip());
-            hintTextView.setVisibility(VISIBLE);
-        }
+        AndroidUtil.updateHintLayout(hintTextView, field);
 
         refresh();
     }

@@ -75,7 +75,6 @@ open class DDMFieldGridView @JvmOverloads constructor(context: Context, attrs: A
 	override fun refresh() {
 		setupLabelLayout()
 		refreshGridRows()
-		AndroidUtil.updateLabelLayout(labelTextView, field, context)
 	}
 
 	override fun onPostValidation(valid: Boolean) {
@@ -133,10 +132,8 @@ open class DDMFieldGridView @JvmOverloads constructor(context: Context, attrs: A
 	}
 
 	private fun setupLabelLayout() {
-		if (gridField.tip.isNotEmpty()) {
-			hintTextView.text = gridField.tip
-			hintTextView.visibility = View.VISIBLE
-		}
+		AndroidUtil.updateLabelLayout(labelTextView, gridField, context)
+		AndroidUtil.updateHintLayout(hintTextView, gridField)
 	}
 
 	private fun onColumnValueChanged(which: Int, row: Option, ddmFieldGridRowView: DDMFieldGridRowView) {

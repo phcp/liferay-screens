@@ -72,10 +72,7 @@ public class DDLFieldRadioView extends LinearLayout
             radioGroup.setOrientation(HORIZONTAL);
         }
 
-        if (!StringUtils.isNullOrEmpty(this.field.getTip())) {
-            hintTextView.setText(this.field.getTip());
-            hintTextView.setVisibility(VISIBLE);
-        }
+        AndroidUtil.updateHintLayout(hintTextView, field);
 
         renderOptions(field);
 

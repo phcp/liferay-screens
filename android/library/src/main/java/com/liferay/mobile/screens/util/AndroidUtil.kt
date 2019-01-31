@@ -126,6 +126,14 @@ class AndroidUtil {
 		}
 
 		@JvmStatic
+		fun updateHintLayout(hintTextView: TextView?, field: Field<*>) {
+			if (field.tip != null && field.tip.isNotEmpty()) {
+				hintTextView?.text = field.tip
+				hintTextView?.visibility = View.VISIBLE
+			}
+		}
+
+		@JvmStatic
 		fun updateViewState(view: View, enabled: Boolean) {
 			view.isEnabled = enabled
 		}

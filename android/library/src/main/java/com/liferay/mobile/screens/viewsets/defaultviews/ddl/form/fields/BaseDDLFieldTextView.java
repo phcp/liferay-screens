@@ -95,10 +95,8 @@ public abstract class BaseDDLFieldTextView<T extends Field> extends LinearLayout
             textEditText.setHint(this.field.getPlaceHolder());
         }
 
-        if (!StringUtils.isNullOrEmpty(this.field.getTip())) {
-            hintTextView.setText(this.field.getTip());
-            hintTextView.setVisibility(VISIBLE);
-        }
+        AndroidUtil.updateLabelLayout(labelTextView, field, getContext());
+        AndroidUtil.updateHintLayout(hintTextView, field);
     }
 
     public TextView getLabelTextView() {
@@ -132,7 +130,7 @@ public abstract class BaseDDLFieldTextView<T extends Field> extends LinearLayout
             textEditText.setText(newText);
         }
 
-        AndroidUtil.updateLabelLayout(labelTextView, field, getContext());
+        setupFieldLayout();
     }
 
     @Override
