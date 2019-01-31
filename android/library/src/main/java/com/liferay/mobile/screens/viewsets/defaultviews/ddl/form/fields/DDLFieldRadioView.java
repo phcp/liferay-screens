@@ -68,18 +68,6 @@ public class DDLFieldRadioView extends LinearLayout
     public void setField(SelectableOptionsField field) {
         this.field = field;
 
-        if (this.field.isShowLabel()) {
-            TextView label = findViewById(R.id.liferay_ddl_label);
-
-            label.setText(field.getLabel());
-            label.setVisibility(VISIBLE);
-
-            if (this.field.isRequired()) {
-                Spannable requiredAlert = ThemeUtil.getRequiredSpannable(getContext());
-                label.append(requiredAlert);
-            }
-        }
-
         if (this.field.isInline()) {
             radioGroup.setOrientation(HORIZONTAL);
         }
@@ -132,6 +120,9 @@ public class DDLFieldRadioView extends LinearLayout
                 }
             }
         }
+
+        TextView labelTextView = findViewById(R.id.liferay_ddl_label);
+        AndroidUtil.updateLabelLayout(labelTextView, field, getContext());
     }
 
     @Override

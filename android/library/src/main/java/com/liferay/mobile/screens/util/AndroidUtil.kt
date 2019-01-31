@@ -31,6 +31,8 @@ import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.os.Build.VERSION.SDK_INT
 import android.text.Html
 import android.text.Spanned
+import com.liferay.mobile.screens.ddl.model.Field
+import com.liferay.mobile.screens.viewsets.defaultviews.util.ThemeUtil
 
 /**
  * @author Victor Oliveira
@@ -109,8 +111,23 @@ class AndroidUtil {
 		}
 
 		@JvmStatic
+		fun updateLabelLayout(labelTextView: TextView, field: Field<*>, context: Context) {
+			if (field.isShowLabel) {
+				labelTextView.text = field.label
+				labelTextView.visibility = View.VISIBLE
+
+				if (field.isRequired) {
+					val requiredAlert = ThemeUtil.getRequiredSpannable(context)
+					labelTextView.append(requiredAlert)
+				}
+			} else {
+				labelTextView.visibility = View.GONE
+			}
+		}
+
+		@JvmStatic
 		fun updateViewState(view: View, enabled: Boolean) {
-			view?.isEnabled = enabled
+			view.isEnabled = enabled
 		}
 	}
 }
