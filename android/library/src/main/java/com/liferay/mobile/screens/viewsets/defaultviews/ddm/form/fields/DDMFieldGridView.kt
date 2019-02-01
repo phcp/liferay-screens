@@ -29,6 +29,7 @@ import com.liferay.mobile.screens.ddm.form.model.Grid
 import com.liferay.mobile.screens.ddm.form.model.GridField
 import com.liferay.mobile.screens.ddm.form.model.get
 import com.liferay.mobile.screens.thingscreenlet.delegates.bindNonNull
+import com.liferay.mobile.screens.util.AndroidUtil
 import com.liferay.mobile.screens.viewsets.defaultviews.util.ThemeUtil
 import org.jetbrains.anko.childrenSequence
 import rx.Observable
@@ -131,20 +132,8 @@ open class DDMFieldGridView @JvmOverloads constructor(context: Context, attrs: A
 	}
 
 	private fun setupLabelLayout() {
-		if (gridField.isShowLabel && gridField.label.isNotEmpty()) {
-			labelTextView.text = gridField.label
-			labelTextView.visibility = View.VISIBLE
-
-			if (this.gridField.isRequired) {
-				val requiredAlert = ThemeUtil.getRequiredSpannable(context)
-				labelTextView.append(requiredAlert)
-			}
-		}
-
-		if (gridField.tip.isNotEmpty()) {
-			hintTextView.text = gridField.tip
-			hintTextView.visibility = View.VISIBLE
-		}
+		AndroidUtil.updateLabelLayout(labelTextView, gridField, context)
+		AndroidUtil.updateHintLayout(hintTextView, gridField)
 	}
 
 	private fun onColumnValueChanged(which: Int, row: Option, ddmFieldGridRowView: DDMFieldGridRowView) {
@@ -156,8 +145,7 @@ open class DDMFieldGridView @JvmOverloads constructor(context: Context, attrs: A
 			this.gridField.currentValue.rawValues[row.value] = option.value
 		}
 
-		val columnEditText = ddmFieldGridRowView.columnSelectView.textEditText
-		columnEditText.setTypeface(columnEditText.typeface, Typeface.BOLD)
+		ddmFieldGridRowView.refresh()
 
 		changeValuesSubscriber?.onNext(field.isValid)
 		changeValuesGridSubscriber?.onNext(field)
@@ -175,8 +163,14 @@ open class DDMFieldGridView @JvmOverloads constructor(context: Context, attrs: A
 
 			ddmFieldGridRowView.setOptions(row, gridField.columns)
 
-			ddmFieldGridRowView.columnSelectView.setOnValueChangedListener { _, which ->
-				onColumnValueChanged(which, row, ddmFieldGridRowView)
+			ddmFieldGridRowView.columnSelectView.apply {
+				setOnValueChangedListener { _, which ->
+					onColumnValueChanged(which, row, ddmFieldGridRowView)
+				}
+
+				setOnClearListener {
+                    ddmFieldGridRowView.refresh()
+				}
 			}
 		}
 

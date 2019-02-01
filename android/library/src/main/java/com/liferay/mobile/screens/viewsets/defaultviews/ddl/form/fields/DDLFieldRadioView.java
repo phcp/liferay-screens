@@ -68,26 +68,11 @@ public class DDLFieldRadioView extends LinearLayout
     public void setField(SelectableOptionsField field) {
         this.field = field;
 
-        if (this.field.isShowLabel()) {
-            TextView label = findViewById(R.id.liferay_ddl_label);
-
-            label.setText(field.getLabel());
-            label.setVisibility(VISIBLE);
-
-            if (this.field.isRequired()) {
-                Spannable requiredAlert = ThemeUtil.getRequiredSpannable(getContext());
-                label.append(requiredAlert);
-            }
-        }
-
         if (this.field.isInline()) {
             radioGroup.setOrientation(HORIZONTAL);
         }
 
-        if (!StringUtils.isNullOrEmpty(this.field.getTip())) {
-            hintTextView.setText(this.field.getTip());
-            hintTextView.setVisibility(VISIBLE);
-        }
+        AndroidUtil.updateHintLayout(hintTextView, field);
 
         renderOptions(field);
 
@@ -132,6 +117,9 @@ public class DDLFieldRadioView extends LinearLayout
                 }
             }
         }
+
+        TextView labelTextView = findViewById(R.id.liferay_ddl_label);
+        AndroidUtil.updateLabelLayout(labelTextView, field, getContext());
     }
 
     @Override
@@ -208,6 +196,7 @@ public class DDLFieldRadioView extends LinearLayout
         setSaveEnabled(true);
 
         onChangedValueObservable = RxRadioGroup.checkedChanges(radioGroup)
+            .skip(1)
             .distinctUntilChanged()
             .map(new Func1<Integer, SelectableOptionsField>() {
                 @Override

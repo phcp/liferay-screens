@@ -39,12 +39,14 @@ import com.liferay.mobile.screens.ddl.model.DocumentLocalFile
 import com.liferay.mobile.screens.ddl.model.Field
 import com.liferay.mobile.screens.ddm.form.DDMFormListener
 import com.liferay.mobile.screens.ddm.form.model.*
+import com.liferay.mobile.screens.ddm.form.util.setFieldVisibility
 import com.liferay.mobile.screens.ddm.form.view.SuccessPageActivity
 import com.liferay.mobile.screens.thingscreenlet.delegates.bindNonNull
 import com.liferay.mobile.screens.thingscreenlet.screens.ThingScreenlet
 import com.liferay.mobile.screens.thingscreenlet.screens.views.BaseView
 import com.liferay.mobile.screens.util.AndroidUtil
 import com.liferay.mobile.screens.util.LiferayLogger
+import com.liferay.mobile.screens.util.extensions.firstNotNull
 import com.liferay.mobile.screens.viewsets.defaultviews.ddl.form.fields.BaseDDLFieldTextView
 import com.liferay.mobile.screens.viewsets.defaultviews.ddl.form.fields.DDLDocumentFieldView
 import com.liferay.mobile.screens.viewsets.defaultviews.ddm.form.adapters.DDMPagerAdapter
@@ -55,6 +57,7 @@ import org.jetbrains.anko.childrenSequence
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -272,23 +275,17 @@ class DDMFormView @JvmOverloads constructor(
 	}
 
 	override fun updateFieldView(fieldContext: FieldContext, field: Field<*>) {
-		val fieldsContainerView = ddmFieldViewPages.currentView
+		val fieldView = getInstantiatedPages().map {
+			findViewWithTag<View>(field.name)
+		}.firstNotNull()
 
-		val fieldView = fieldsContainerView?.findViewWithTag<View>(field.name)
+		fieldView?.setFieldVisibility(fieldContext)
 
-		fieldView?.let {
-			val fieldViewModel = fieldView as? DDLFieldViewModel<*>
-			val fieldTextView = fieldView as? BaseDDLFieldTextView<*>
+		(fieldView as? DDLFieldViewModel<*>)?.apply {
+			refresh()
+			setUpdateMode(!field.isReadOnly)
 
-			setFieldVisibility(fieldContext, fieldView)
-			fieldTextView?.setupFieldLayout()
-
-			fieldViewModel?.let {
-				it.refresh()
-				it.setUpdateMode(!field.isReadOnly)
-			}
-
-			presenter.checkIsDirty(field, fieldContext, fieldViewModel)
+			presenter.checkIsDirty(field, fieldContext, this)
 		}
 	}
 
@@ -455,16 +452,6 @@ class DDMFormView @JvmOverloads constructor(
 	private fun setActivityTitle(formInstance: FormInstance) {
 		val activityFromContext = LiferayScreensContext.getActivityFromContext(context)
 		activityFromContext?.title = formInstance.name
-	}
-
-	private fun setFieldVisibility(fieldContext: FieldContext, fieldView: View) {
-		val isVisible = fieldContext.isVisible ?: true
-
-		if (isVisible) {
-			fieldView.visibility = View.VISIBLE
-		} else {
-			fieldView.visibility = View.GONE
-		}
 	}
 
 	private fun showConnectivityErrorMessage(@ColorRes backgroundColorResource: Int = R.color.midGray,

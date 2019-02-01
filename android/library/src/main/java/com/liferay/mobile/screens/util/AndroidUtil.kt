@@ -27,10 +27,10 @@ import android.widget.TextView
 import com.liferay.mobile.screens.R
 import com.liferay.mobile.screens.ddl.model.DocumentLocalFile
 import java.io.InputStream
-import android.text.Html.FROM_HTML_MODE_LEGACY
-import android.os.Build.VERSION.SDK_INT
 import android.text.Html
 import android.text.Spanned
+import com.liferay.mobile.screens.ddl.model.Field
+import com.liferay.mobile.screens.viewsets.defaultviews.util.ThemeUtil
 
 /**
  * @author Victor Oliveira
@@ -109,8 +109,32 @@ class AndroidUtil {
 		}
 
 		@JvmStatic
-		fun updateViewState(view: View, enabled: Boolean) {
+		fun updateLabelLayout(labelTextView: TextView, field: Field<*>, context: Context) {
+			if (field.isShowLabel) {
+				labelTextView.text = field.label
+				labelTextView.visibility = View.VISIBLE
+
+				if (field.isRequired) {
+					val requiredAlert = ThemeUtil.getRequiredSpannable(context)
+					labelTextView.append(requiredAlert)
+				}
+			} else {
+				labelTextView.visibility = View.GONE
+			}
+		}
+
+		@JvmStatic
+		fun updateHintLayout(hintTextView: TextView?, field: Field<*>) {
+			if (field.tip != null && field.tip.isNotEmpty()) {
+				hintTextView?.text = field.tip
+				hintTextView?.visibility = View.VISIBLE
+			}
+		}
+
+		@JvmStatic
+		fun updateViewState(view: View?, enabled: Boolean) {
 			view?.isEnabled = enabled
 		}
 	}
+
 }
